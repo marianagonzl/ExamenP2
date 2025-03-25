@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Examen P2
+      Registrate Bro
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="logout()">Logout</ion-button>
@@ -12,19 +12,63 @@
 <ion-content class="ion-padding">
   
   <ion-item>
-    <ion-input [(ngModel)]="itemText" placeholder="Agrega tu calificación"></ion-input>
-    <ion-button (click)="addSong()" color="primary">
-      {{ editingItemId ? 'Actualizar' : 'Agregar' }}
-    </ion-button>
+    <ion-label position="floating">Nombre</ion-label>
+    <ion-input [(ngModel)]="studentName" placeholder="Ingresa tu nombre"></ion-input>
   </ion-item>
 
+  <ion-item>
+    <ion-label position="floating">Apellidos</ion-label>
+    <ion-input [(ngModel)]="studentLastName" placeholder="Ingresa tus apellidos"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Matrícula</ion-label>
+    <ion-input [(ngModel)]="studentMatricula" placeholder="Ingresa tu matrícula"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">Correo Electrónico</ion-label>
+    <ion-input [(ngModel)]="studentEmail" placeholder="Ingresa tu correo electrónico"></ion-input>
+  </ion-item>
+
+  
+  <ion-item>
+    <ion-label position="floating">DAMM</ion-label>
+    <ion-input [(ngModel)]="studentGrades.damm" placeholder="Ingresa la calificación de DAMM" type="number"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">OCA</ion-label>
+    <ion-input [(ngModel)]="studentGrades.oca" placeholder="Ingresa la calificación de OCA" type="number"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">MATE</ion-label>
+    <ion-input [(ngModel)]="studentGrades.mate" placeholder="Ingresa la calificación de MATE" type="number"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">PMP</ion-label>
+    <ion-input [(ngModel)]="studentGrades.pmp" placeholder="Ingresa la calificación de PMP" type="number"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">M3D</ion-label>
+    <ion-input [(ngModel)]="studentGrades.m3d" placeholder="Ingresa la calificación de M3D" type="number"></ion-input>
+  </ion-item>
+
+  <ion-button expand="full" (click)="addStudent()">Registrar</ion-button>
+
+  
   <ion-list>
-    <ion-item *ngFor="let item of items$ | async">
-
-      <ion-label>{{ item.title }}</ion-label>
-
-      <ion-button (click)="editItem(item)" color="warning">Edit</ion-button>
-      <ion-button (click)="deleteSong(item.id!)" color="danger">Delete</ion-button>
+    <ion-item *ngFor="let student of students">
+      <ion-label>
+        {{ student.name }} {{ student.lastName }} - Matrícula: {{ student.matricula }}<br>
+        Correo: {{ student.email }}<br>
+        Calificaciones: DAMM: {{ student.grades.damm }}, OCA: {{ student.grades.oca }},
+        MATE: {{ student.grades.mate }}, PMP: {{ student.grades.pmp }},
+        M3D: {{ student.grades.m3d }}
+      </ion-label>
     </ion-item>
   </ion-list>
 </ion-content>

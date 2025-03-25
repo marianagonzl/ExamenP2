@@ -5,7 +5,22 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth.service'; 
 import { Router } from '@angular/router';
-import { ItemService , Item } from '../item.service';
+import { ItemService, Item } from '../item.service';
+import { Auth } from '@angular/fire/auth';
+
+interface Student {
+  name: string;
+  lastName: string;
+  matricula: string;
+  email: string;
+  grades: {
+    damm: number;
+    oca: number;
+    mate: number;
+    pmp: number;
+    m3d: number;
+  };
+}
 
 @Component({
   selector: 'app-home',
@@ -15,44 +30,71 @@ import { ItemService , Item } from '../item.service';
   imports: [IonicModule, CommonModule, FormsModule],
 })
 export class HomePage implements OnInit {
-  itemText = ''; 
-  marketItem = '';
-  items$: Observable<Item[]> = new Observable(); // Cambiar a Observable para Firestore
-  editingItemId: string | null = null; 
+  
+  studentName = '';
+  studentLastName = '';
+  studentMatricula = '';
+  studentEmail = '';
+  studentGrades = {
+    damm: 0,
+    oca: 0,
+    mate: 0,
+    pmp: 0,
+    m3d: 0
+  };
+  students: Student[] = []; 
 
-  constructor(private itemService: ItemService, private authService: AuthService, private router: Router) {} 
+  constructor(private authService: AuthService, private router: Router, private auth: Auth) {}
 
   ngOnInit() {
-    this.items$ = this.itemService.getItems(); // Obtener tareas desde Firestore
+    this.checkAuth();
   }
 
-  addSong() {
-    console.log('Agregando canción:', this.itemText);
-    if (this.itemText.trim()) {
-      const newItem: Item = { title: this.itemText, done: false };
-
-      if (this.editingItemId) {
-        this.itemService.updateItem(this.editingItemId, { title: this.itemText }).then(() => {
-          this.editingItemId = null; 
-          this.itemText = '';
-        });
-      } else {
-        this.itemService.addItem(newItem).then(() => {
-          this.itemText = '';
-        });
-      }
+  
+  checkAuth() {
+    if (!this.auth.currentUser) {
+      this.router.navigate(['/login']);
     }
   }
 
-  editItem(item: Item) {
-    this.itemText = item.title;
-    this.editingItemId = item.id || null;
+  
+  addStudent() {
+    if (
+      this.studentName &&
+      this.studentLastName &&
+      this.studentMatricula &&
+      this.studentEmail &&
+      this.studentGrades.damm != null &&
+      this.studentGrades.oca != null &&
+      this.studentGrades.mate != null &&
+      this.studentGrades.pmp != null &&
+      this.studentGrades.m3d != null
+    ) {
+      const newStudent: Student = {
+        name: this.studentName,
+        lastName: this.studentLastName,
+        matricula: this.studentMatricula,
+        email: this.studentEmail,
+        grades: { ...this.studentGrades }
+      };
+
+      this.students.push(newStudent);
+      this.resetForm();
+    } else {
+      alert('Por favor, completa todos los campos');
+    }
   }
 
-  deleteSong(itemId: string) {
-    this.itemService.deleteItem(itemId);
+  
+  resetForm() {
+    this.studentName = '';
+    this.studentLastName = '';
+    this.studentMatricula = '';
+    this.studentEmail = '';
+    this.studentGrades = { damm: 0, oca: 0, mate: 0, pmp: 0, m3d: 0 };
   }
 
+  
   async logout() {
     try {
       await this.authService.logout();
@@ -62,8 +104,4 @@ export class HomePage implements OnInit {
       console.error('Error al cerrar sesión:', error);
     }
   }
-  addItem() {
-    this.addSong(); // Reusa tu lógica
-  }
-  
 }
