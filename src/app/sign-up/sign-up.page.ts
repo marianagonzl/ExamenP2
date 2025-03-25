@@ -15,7 +15,7 @@ import { Auth } from '@angular/fire/auth';
   standalone: true,
   imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
-export class SignupPage implements OnInit {
+export class SignUpPage implements OnInit {
 
   email: string = '';
   password: string = '';
